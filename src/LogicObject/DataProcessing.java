@@ -14,11 +14,11 @@ import java.util.Hashtable;
 import javax.swing.JOptionPane;
 
 
-
 public class DataProcessing {
 	public static void main(String[] args) {
 		
 	}
+	private static int creloanid=10000;
 	private static Connection connection;
 	private static Statement statement;
 	private static Statement statement_1;
@@ -166,6 +166,22 @@ public class DataProcessing {
 		ArrayList<loan> list=loans.get(borrowerid);
 		return list;
 	}
+	
+	public static boolean updateborrow(String browid,String bookid) throws ClassNotFoundException, SQLException{
+		if(!connectedToDB)
+			throw new SQLException("无法连接到数据库");
+		String sql0="update bookitem set bookamount=bookamount-1 where bookitemid="+bookid;
+		String sql1="insert into loan values('"+Integer.toString(creloanid)+"','"+browid+"','2018-12-15','2019-1-15','a',0,'"+bookid+"')";
+		creloanid++;	//自增借书记录号
+		if(!statement.execute(sql0)) System.out.println("更新booktiem");
+		if(!statement.execute(sql1)) System.out.println("更新loan");
+		init();
+		return true;
+	
+	}
+	
+	
+	
 	public static  void connectToDB(String driverName) throws SQLException, ClassNotFoundException{
 		Class.forName(driverName);		
 		connection=DriverManager.getConnection(url, user, password);

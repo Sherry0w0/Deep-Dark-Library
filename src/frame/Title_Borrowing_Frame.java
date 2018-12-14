@@ -6,11 +6,20 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import LogicObject.Borrower;
+import LogicObject.DataProcessing;
+import LogicObject.bookitem;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.GridLayout;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+import java.util.Enumeration;
 
 public class Title_Borrowing_Frame extends JFrame {
 
@@ -25,7 +34,7 @@ public class Title_Borrowing_Frame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Title_Borrowing_Frame frame = new Title_Borrowing_Frame();
+					Title_Borrowing_Frame frame = new Title_Borrowing_Frame(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,9 +46,9 @@ public class Title_Borrowing_Frame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Title_Borrowing_Frame() {
+	public Title_Borrowing_Frame(Borrower borrower) {
 		setTitle("\u501F\u4E66\u754C\u9762");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -50,11 +59,14 @@ public class Title_Borrowing_Frame extends JFrame {
 		contentPane.add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 		
-		JLabel label = new JLabel("\u501F\u4E66\u8005\uFF1A");
-		label.setBounds(80, 38, 60, 18);
-		panel.add(label);
+		JLabel lblid = new JLabel("\u501F\u4E66\u8005id\uFF1A");
+		lblid.setBounds(80, 35, 92, 21);
+		panel.add(lblid);
 		
 		textField = new JTextField();
+		String t=borrower.getBorrowerID();
+		textField.setText(t);
+		textField.setEditable(false);
 		textField.setBounds(220, 35, 121, 24);
 		panel.add(textField);
 		textField.setColumns(10);
@@ -69,6 +81,31 @@ public class Title_Borrowing_Frame extends JFrame {
 		textField_1.setColumns(10);
 		
 		JButton button = new JButton("\u501F\u9605");
+		button.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				String text1=textField_1.getText();
+				Enumeration<bookitem> En;
+				En = DataProcessing.getAllBook();
+				while(En.hasMoreElements()){
+					bookitem temp = En.nextElement();
+					if(temp.getBookitemid().equals(text1)) {
+						try {
+							if(DataProcessing.updateborrow(t,text1)){
+								System.out.println("borrow success");
+							}							
+							else;
+						} catch (ClassNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		});
 		button.setBounds(144, 180, 113, 27);
 		panel.add(button);
 	}

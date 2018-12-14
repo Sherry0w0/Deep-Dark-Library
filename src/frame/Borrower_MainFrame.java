@@ -104,6 +104,16 @@ public class Borrower_MainFrame extends JFrame {
 			}
 		});
 		menuBar.add(menu_3);
+		
+		JMenu menu_4 = new JMenu("\u501F\u9605\u56FE\u4E66");
+		menu_4.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				Title_Borrowing_Frame frame = new Title_Borrowing_Frame(borrower);
+				frame.setVisible(true);
+			}
+		});
+		menuBar.add(menu_4);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
