@@ -12,6 +12,7 @@ import LogicObject.DataProcessing;
 import LogicObject.bookitem;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.GridLayout;
 import java.awt.FlowLayout;
@@ -93,8 +94,11 @@ public class Title_Borrowing_Frame extends JFrame {
 						try {
 							if(DataProcessing.updateborrow(t,text1)){
 								System.out.println("borrow success");
+								JOptionPane.showMessageDialog(null, "ΩË‘ƒ≥…π¶");
 							}							
-							else;
+							else{
+								JOptionPane.showMessageDialog(null, "ΩË‘ƒ ß∞‹");
+							}
 						} catch (ClassNotFoundException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

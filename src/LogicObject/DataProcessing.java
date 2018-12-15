@@ -107,6 +107,7 @@ public class DataProcessing {
 				bookitems.put(bookitemid, bitmp);				
 			}
 		}
+																//loan的hashtable
 		sql="select* from loan";
 		resultSet=statement.executeQuery(sql);
 		loan ltmp=null;
@@ -128,7 +129,16 @@ public class DataProcessing {
 			else
 				{
 					ArrayList<loan> list=loans.get(borrowerid);
-					list.add(ltmp);
+					boolean tmp=true;		//临时判定变量
+					for(int i=0;i<list.size();i++) {
+						if(list.get(i).getLoanid().equals(loanid)){		//判断list中已经有该借阅号信息（是否）
+							tmp=false;			//false则list无法add
+							list.set(i, ltmp);	//有相同借阅号就覆盖更新
+						}
+					}
+					if(tmp) {			//wincen:重复的记录不add到list中
+						list.add(ltmp);
+					}
 					loans.put(borrowerid, list);
 				}
 		}
@@ -170,6 +180,13 @@ public class DataProcessing {
 	public static boolean updateborrow(String browid,String bookid) throws ClassNotFoundException, SQLException{
 		if(!connectedToDB)
 			throw new SQLException("无法连接到数据库");
+		//判断bookamount是否大于0
+		String basql="select bookamount from bookitem where bookitemid="+bookid;
+		resultSet=statement.executeQuery(basql);
+		while(resultSet.next()) {
+			if(resultSet.getInt("bookamount")<=0) return false;
+		}
+		//更新数据库
 		String sql0="update bookitem set bookamount=bookamount-1 where bookitemid="+bookid;
 		String sql1="insert into loan values('"+Integer.toString(creloanid)+"','"+browid+"','2018-12-15','2019-1-15','a',0,'"+bookid+"')";
 		creloanid++;	//自增借书记录号
